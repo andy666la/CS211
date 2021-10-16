@@ -29,7 +29,7 @@ void dgemm1(const double *A, const double *B, double *C, const int n)
     }
 }
 //Register Reuse part 1 End
-
+/**
 //Register Reuse part 2
 void dgemm2(const double *A, const double *B, double *C, const int n) 
 {
@@ -150,7 +150,7 @@ void ijk(const double *A, const double *B, double *C, const int n)
                 sum += A[i*n+k] * B[i*k+j]; 
             C[i*n+j] = sum;
 }
-
+}
 void bijk(const double *A, const double *B, double *C, const int n, const int b) 
 {
 	 int i, j, k, i1, j1, k1;
@@ -185,7 +185,7 @@ void bjik(const double *A, const double *B, double *C, const int n, const int b)
     for (j = 0; j < n; j+=b)
         for (i = 0; i < n; i+=b)
             for (k = 0; k < n; k+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (j1 = j; j1 < j+b; j++)
                     for (i1 = i; i1 < i+b; i++) {
                         register double r = C[i1*n+j1];
@@ -213,7 +213,7 @@ void bkij(const double *A, const double *B, double *C, const int n, const int b)
     for (k = 0; k < n; k+=b)
         for (i = 0; i < n; i+=b)
             for (j = 0; j < n; j+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (k1 = k; k1 < k+b; k++)
                     for (i1 = i; i1 < i+b; i++) {
                         register double r = A[i1*n + k1];
@@ -241,7 +241,7 @@ int i, j, k, i1, j1, k1;
     for (i = 0; i < n; i+=b)
         for (k = 0; k < n; k+=b)
             for (j = 0; j < n; j+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (i1 = i; i1 < i+b; i++)
                     for (k1 = k; k1 < k+b; k++) {
                         register double r = A[i1*n + k1];
@@ -268,7 +268,7 @@ void bjki(const double *A, const double *B, double *C, const int n, const int b)
     for (j = 0; j < n; j+=b)
         for (k = 0; k < n; k+=b)
             for (i = 0; i < n; i+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (j1 = j; j1 < j+b; j++)
                     for (k1 = k; k1 < k+b; k++) {
                         register double r = B[k1*n + j1];
@@ -295,7 +295,7 @@ void bkji(const double *A, const double *B, double *C, const int n, const int b)
     for (k = 0; k < n; k+=b)
         for (j = 0; j < n; j+=b)
             for (i = 0; i < n; i+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (k1 = k; k1 < k+b; k++)
                     for (j1 = j; j1 < j+b; j++) {
                         register double r = B[k1*n + j1];
@@ -312,13 +312,13 @@ void optimal(const double* A, const double* B, double *C, const int n, const int
     for (i = 0; i < n; i+=b)
         for (j = 0; j < n; j+=b)
             for (k = 0; k < n; k+=b)
-                /* B x B mini matrix multiplications */
+                
                 for (i1 = i; i1 < i+b; i += 2)
                     for (j1 = j; j1 < j+b; j += 2) {
                         register int t = i1*n+j1; register int tt = t+n; 
                         register double c00 = C[t]; register double c01 = C[t+1];  register double c10 = C[tt]; register double c11 = C[tt+1];
                         for (k1 = k; k1 < k+b; k += 2) {
-                            /* 2 by 2 mini matrix multiplication using registers*/
+                            
                             register int ta = i1*n+k1; register int tta = ta+n; register int tb = k1*n+j1; register int ttb = tb+n;
                             register double a00 = A[ta]; register double a10 = A[tta]; register double b00 = B[tb]; register double b01 = B[tb+1]; 
 
@@ -332,3 +332,4 @@ void optimal(const double* A, const double* B, double *C, const int n, const int
                         C[tt+1] = c11;
                     }
 }
+**/
