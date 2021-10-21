@@ -77,45 +77,44 @@ for(i = 0; i < n; i += 2)
 //Cache Reuse part 3
 void ijk(const double *A, const double *B, double *C, const int n)
 {
-	int i,j,k;
-	for (i=0; i<n; i++)
-		for (j=0; j<n; j++){
-			register double r=C[i*n+j];
-				for (k=0; k<n; k++)
-				r += A[i*n+k] * B[k*n+j];
-				C[i*n+j]=r;
-			}
+int i,j,k;
+for (i=0; i<n; i++)  {
+  for (j=0; j<n; j++) {
+    register double sum = C[i*n+j];
+    for (k=0; k<n; k++)
+      sum += A[i*n+k] * B[k*n+j];
+    C[i*n+j] = sum;
+  }
+}
+
 }
 
 void bijk(const double *A, const double *B, double *C, const int n, const int b)
 {
-	int i,j,k,i1,k1,j1;
-	for (i = 0; i < n; i+=b){
-		for (j = 0; j < n; j+=b){
-			for (k = 0; k < n; k+=b){
-				for (i1 = i; i1 < i+b; i1++){
-					for (j1 = j; j1 < j+b; j1++) {
-					register double r=C[i1*n+j1];
-					for (k1 = k; k1 < k+b; k1++){
-					r += A[i1*n + k1]*B[k1*n + j1];
-						}
-				C[i1*n+j1]=r;
-				}
-			}
-		}
-		}
-	}
-}
+int i1,j1,k1;
+int i,j,k;
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (i=i1; i<i1+b; i++)  {
+  for (j=j1; j<j1+b; j++) {
+    register double sum = C[i*n+j];
+    for (k=k1; k<k1+b; k++)
+      sum += A[i*n+k] * B[k*n+j];
+    C[i*n+j] = sum;
+  }
 
+}
+}
 void jik(const double *A, const double *B, double *C, const int n)
 {
 int i,j,k;
 for (j=0; j<n; j++) {
   for (i=0; i<n; i++) {
-    register double r = C[i*n+j];
+    register double sum = C[i*n+j];
     for (k=0; k<n; k++)
-      r += A[i*n+k] * B[k*n+j];
-    C[i*n+j] = r;
+      sum += A[i*n+k] * B[k*n+j];
+    C[i*n+j] = sum;
   }
 }
 
@@ -123,18 +122,19 @@ for (j=0; j<n; j++) {
 
 void bjik(const double *A, const double *B, double *C, const int n, const int b)
 {
-	int i,j,k,i1,j1,k1;
-	for (j = 0; j < n; j+=b)
-		for (i = 0; i < n; i+=b)
-			for (k = 0; k < n; k+=b)
-				for (j1 = j; j1 < j+b; j1++)
-					for (i1 = i; i1 < i+b; i1++) {
-			register double r=C[i1*n+j1];
-				for (k1 = k; k1 < k+b; k1++)
-			r += A[i1*n + k1]*B[k1*n + j1];
-			C[i1*n+j1]=r;
+int i1,j1,k1;
+int i,j,k;
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (j=j1; j<j1+b; j++) {
+  for (i=i1; i<i1+b; i++) {
+    register double sum = C[i*n+j];
+    for (k=k1; k<k1+b; k++)
+      sum += A[i*n+k] * B[k*n+j];
+    C[i*n+j] = sum;
+  }
 }
-
 
 }
 
@@ -153,15 +153,17 @@ for (k=0; k<n; k++) {
 
 void bkij(const double *A, const double *B, double *C, const int n, const int b)
 {
-	int i,j,k,i1,j1,k1;
-	for (k = 0; k < n; k+=b)
-		for (i = 0; i < n; i+=b)
-			for (j = 0; j < n; j+=b)
-				for (k1 = k; k1 < k+b; k1++)
-					for (i1 = i; i1 < i+b; i1++) {
-					register double r=A[i1*n+k1];
-						for (j1 = j; j1 < j+b; j1++)
-						C[i1*n+j1] += r*B[k1*n + j1];
+int i1,j1,k1;
+int i,j,k;
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (k=k1; k<k1+b; k++) {
+  for (i=i1; i<i1+b; i++) {
+   register double r = A[i*n+k];
+    for (j=j1; j<j1+b; j++)
+      C[i*n+j] += r * B[k*n+j];
+  }
 }
 
 }
@@ -182,18 +184,18 @@ for (i=0; i<n; i++) {
 
 void bikj(const double *A, const double *B, double *C, const int n, const int b)
 {
-	int i1,j1,k1;
-	int i,j,k;
-	for (i1 = 0; i1 < n; i1+=b)
-		for (j1 = 0; j1 < n; j1+=b)
-			for (k1 = 0; k1 < n; k1+=b)
-				for (i=i1; i<i1+b; i++) {
-					for (k=k1; k<k1+b; k++) {
-						register double r = A[i*n+k];
-						for (j=j1; j<j1+b; j++)
-						C[i*n+j] += r * B[k*n+j];
-					}
-				}
+int i1,j1,k1;
+int i,j,k;
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (i=i1; i<i1+b; i++) {
+  for (k=k1; k<k1+b; k++) {
+    register double r = A[i*n+k];
+    for (j=j1; j<j1+b; j++)
+      C[i*n+j] += r * B[k*n+j];
+  }
+}
 
 }
 
@@ -213,16 +215,16 @@ void bjki(const double *A, const double *B, double *C, const int n, const int b)
 {
 int i1,j1,k1;
 int i,j,k;
-	for (j = 0; j < n; j+=b)
-		for (k = 0; k < n; k+=b)
-			for (i = 0; i < n; i+=b)
-				for (j1 = j; j1 < j+b; j1++)
-					for (k1 = k; k1 < k+b; k1++) {
-					register double r=B[k1*n+j1];
-						for (i1 = i; i1 < i+b; i1++)
-						C[i1*n+j1] += A[i1*n + k1]*r;
-					}
-
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (j=j1; j<j1+b; j++) {
+  for (k=k1; k<k1+b; k++) {
+   register double r = B[k*n+j];
+    for (i=i1; i<i1+b; i++)
+      C[i*n+j] += A[i*n+k] * r;
+  }
+}
 }
 
 void kji(const double *A, const double *B, double *C, const int n)
@@ -241,16 +243,16 @@ void bkji(const double *A, const double *B, double *C, const int n, const int b)
 {
 int i1,j1,k1;
 int i,j,k;
-	for (k = 0; k < n; k+=b)
-		for (i = 0; i < n; i+=b)
-			for (j = 0; j < n; j+=b)
-				for (k1 = k; k1 < k+b; k1++)
-					for (j1 = j; j1 < j+b; j1++) {
-					register double r=B[k1*n+j1];
-						for (i1 = i; i1 < i+b; i1++)
-						C[i1*n+j1] += A[i1*n + k1]*r;
+for (i1 = 0; i1 < n; i1+=b)
+for (j1 = 0; j1 < n; j1+=b)
+for (k1 = 0; k1 < n; k1+=b)
+for (k=k1; k<k1+b; k++) {
+  for (j=j1; j<j1+b; j++) {
+    register double r = B[k*n+j];
+    for (i=i1; i<i1+b; i++)
+      C[i*n+j] += A[i*n+k] * r;
+  }
 }
-
 }
 
 //Cache Reuse part 3 End
@@ -260,20 +262,45 @@ void optimal(const double* A, const double* B, double *C, const int n, const int
 {
     int i, j, k;
     int i1,j1,k1;
-		for(i = 0; i < n; i+=b)
-			for(k = 0; k < n; k+=b)
-				for(j = 0; j < n; j+=b)
-					for (i1 = i; i1 < i+b; i1+=2)
-						for (k1 = k; k1 < k+b; k1+=2){
-						register double a00 = A[i1*n+k1]; register double a10 = A[(i1+1)*n+k1]; 
-						register double a01 = A[i1*n+ (k1+1)]; register double a11 = A[(i1+1)*n + (k1+1)];
-							for (j1 = j; j1 < j+b; j1+=2){
-							register double b00 = B[k1*n+j1]; register double b10 = B[(k1+1)*n+j1]; 
-							register double b01 = B[k1*n+ (j1+1)]; register double b11 = B[(k1+1)*n + (j1+1)];
-							C[i1*n+j1]+=a00*b00 + a01*b10;
-							C[(i1+1)*n + j1] += a10*b00 + a11*b10;
-							C[i1*n + (j1+1)] += a00*b01 + a01*b11;
-							C[(i1+1)*n + (j1+1)] += a10*b01+ a11*b11;
-							}
-						}
+    for (i = 0; i < n; i+=b)
+        for (j = 0; j < n; j+=b)
+             for (k = 0; k < n; k+=b)
+                 /* B x B */
+                for (i1=i; i1<i+b; i1++) {
+                        for (k1=k; k1<k+b; k1++) {
+                                register double r = A[i1*n+k1];
+                                for (j1=j; j1<j+b; j1++)
+                                        C[i1*n+j1] += r * B[k1*n+j1];
+                        }
+                }
 }
+//strassen
+/*
+void optimal(const double* A, const double* B, double *C, const int n, const int b)
+{
+    int i, j, k;
+    double m1,m2,m3,m4,m5,m6,m7;
+    for (i = 0; i < n; i+=2)
+        for (j = 0; j < n; j+=2)
+             for (k = 0; k < n; k+=2)
+                 {
+                register a00=A[i*n+k];          register b00=B[k*n+j];
+                register a01=A[i*n+k+1];        register b01=B[k*n+j+1];
+                register a10=A[i*n+k+n];        register b10=B[k*n+j+n];
+                register a11=A[i*n+k+n+1];      register b11=B[k*n+j+n+1];
+
+                m1 = (a00 + a11) * (b00 + b11);
+                m2 = (a10 + a11) * b00;
+                m3 =  a00 * (b01 - b11);
+                m4 =  a11 * (b10 - b00);
+                m5 = (a00 + a01) * b11;
+                m6 = (a10 - a00) * (b00 + b01);
+                m7 = (a01 - a11) * (b10 + b11);
+
+               register C[i*n+j]        += m1 + m4 - m5 + m7;
+               register C[i*n+j+1]      += m3 + m5 ;
+               register C[i*n+j+n]      += m2 + m4 ;
+               register C[i*n+j+n+1]    += m1 + m3 - m2 + m6 ;
+                }
+}
+*/
