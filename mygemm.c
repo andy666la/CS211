@@ -216,6 +216,7 @@ for (k=0; k<n; k++) {
 
 void bkij(const double *A, const double *B, double *C, const int n, const int b)
 {
+	int i,j,k,i1,j1,k1;
 	for (k = 0; k < n; k+=b)
 		for (i = 0; i < n; i+=b)
 			for (j = 0; j < n; j+=b)
