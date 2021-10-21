@@ -319,37 +319,50 @@ void bkji(const double *A, const double *B, double *C, const int n, const int b)
 //Cache Reuse part 4
 void optimal(const double* A, const double* B, double *C, const int n, const int b)
 {
-    int i, j, k, i1, j1, k1;
-    for (i = 0; i < n; i+=b)
-        for (j = 0; j < n; j+=b)
-            for (k = 0; k < n; k+=b)
-                /* B x B mini matrix multiplications */
-                for (i1 = i; i1 < i+b; i += 2)
-                    for (j1 = j; j1 < j+b; j += 2) {
-                         int t = i1*n+j1; 
-						 int tt = t+n; 
-                         double c00 = C[t];  
-						 double c01 = C[t+1];   
-						 double c10 = C[tt];  
-						 double c11 = C[tt+1];
-                        for (k1 = k; k1 < k+b; k += 2) {
-                            /* 2 by 2 mini matrix multiplication using  s*/
-                            int ta = i1*n+k1;   
-							int tta = ta+n;   
-							int tb = k1*n+j1;   
-							int ttb = tb+n;
-                              double a00 = A[ta];   
-							  double a10 = A[tta];  
-							  double b00 = B[tb];   
-							  double b01 = B[tb+1]; 
-
-                            c00 += a00*b00 ; c01 += a00*b01 ; c10 += a10*b00 ; c11 += a10*b01 ;
-                            a00 = A[ta+1]; a10 = A[tta+1]; b00 = B[ttb]; b01 = B[ttb+1];
-                            c00 += a00*b00 ; c01 += a00*b01 ; c10 += a10*b00 ; c11 += a10*b01 ;
+    int i, j, k;
+    int i1, j1, k1;
+    for(k = 0; k < n; k +=b)
+    {
+        for(i = 0; i < n; i +=b)
+        {
+            for(j = 0; j < n; j +=b)
+            {
+                /* BxB mini matrix multiplications */
+                for(k1 = k; k1 < k+b; k1+=2)
+                {
+                    int k_0 = (k1+1);
+                    int k_1 = k1;
+                    for(i1 = i; i1 < i+b; i1+=2)
+                    {
+                        int i_0 = i1*n;
+                        int i_1 = (i1+1)*n;
+                        double a0 = A[i_0+k_1];
+                        double a1 = A[i_0+k_0];
+                        double a2 = A[i_1+k_1];
+                        double a3 = A[i_1+k_0];
+                        for(j1 = j; j1 < j+b; j1+=2)
+                        {
+                            double c0 = C[i_0 +j1];
+                            double c1 = C[i_1+j1];
+                            double c2 = C[i_0+(j1+1)];
+                            double c3 = C[i_1+(j1+1)];
+                            double b0 = B[k_1*n+j1];
+                            double b1 = B[k_0*n+j1];
+                            double b2 = B[k_1*n+(j1+1)];
+                            double b3 = B[k_0*n+(j1+1)];
+                            c0 = a0 * b0 + a1 * b1 + c0;
+                            c1 = a2 * b0 + a3 * b1 + c1;
+                            c2 = a0 * b2 + a1 * b3 + c2;
+                            c3 = a2 * b2 + a3 * b3 + c3;
+                            C[i_0 +j1] = c0;
+                            C[i_1+j1] = c1;
+                            C[i_0+(j1+1)] = c2;
+                            C[i_1+(j1+1)] = c3;
                         }
-                        C[t] = c00;
-                        C[t+1] = c01;
-                        C[tt] = c10;
-                        C[tt+1] = c11;
                     }
+                }
+            }
+        }
+    }
 }
+
