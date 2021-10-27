@@ -168,22 +168,7 @@ void mydgemm(double *A, double *B, double *C, int n, int matx, int maty, int b)
 
                                                 }
                                         }
-                        }/*
-	int i , j , k, iB , jB , kB;
-		for(k = 0;k < maty;k += b)
-			for(i = 0;i < matx;i += b)
-				for( j = 0;j < matx;j += b)
-				{
-					for(kB = k;kB <k + b && kB < maty;kB++)
-						for(iB = i;iB < i + b && iB < matx;iB++)
-						{
-							register double sum = A[iB * n + kB];
-							for(jB = j;jB < j + b && jB < matx;jB++)
-								C[iB * n + jB] -=sum*B[kB * n + jB];
-						}
-				}*/
-
-
+                        }
 }
 
 /**
