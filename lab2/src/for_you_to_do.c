@@ -46,23 +46,12 @@ int mydgetrf(double *A, int *ipiv, int n)
         }
         // swap row i and max_Aii and the corrosponding vector
         if (max == 0) {
-            // printf("WARNING! A is singular, or near so... \n");
             return -1;
         } else {
-            if (max_Aii != i) { // bug here!!!!
-                // swap i-th and max_Aii-th element of vector pivot
-                // printf("Before swap max_Aii and i... \n");
-                // printf("index max-Aii = %d\n", max_Aii);
-                // printf("ipiv[%d] = %d\n", max_Aii, ipiv[max_Aii]);
-                // printf("index i = %d\n", i);
-                // printf("ipiv[%d] = %d\n", i, ipiv[i]);
+            if (max_Aii != i) { 
                 int temp = ipiv[i];
                 ipiv[i] = ipiv[max_Aii];
                 ipiv[max_Aii] = temp;
-                // printf("After swap max_Aii and i... \n");
-                // printf("ipiv[%d] = %d\n", max_Aii, ipiv[max_Aii]);
-                // printf("ipiv[%d] = %d\n", i, ipiv[i]);
-                // swap i-th row and max_Aii-th row
                 memcpy(temp_Aii, A + i*n, n*sizeof(double));
                 memcpy(A + i*n, A + max_Aii*n, n*sizeof(double));
                 memcpy(A + max_Aii*n, temp_Aii, n*sizeof(double));
@@ -76,11 +65,7 @@ int mydgetrf(double *A, int *ipiv, int n)
             }
         }
     }
-    // printf("finally, ipiv is like this: \n");
-    // int id;    
-    // for (id = 0;id < n;id++) {
-    //     printf("ipiv[%d] = %d\n", id, ipiv[id]);
-    // }
+
     free(temp_Aii);
     return 0;
 }
@@ -112,7 +97,7 @@ int mydgetrf(double *A, int *ipiv, int n)
  *      none
  * 
  **/
-void mydtrsv(char UPLO, double *A, double *B, int n, int *ipiv) { // can only get result by copy to vector B
+void mydtrsv(char UPLO, double *A, double *B, int n, int *ipiv) { 
     /* add your code here */
     int i, j;
     double* y = (double*)malloc(n * sizeof(double)); // vector y
@@ -127,16 +112,9 @@ void mydtrsv(char UPLO, double *A, double *B, int n, int *ipiv) { // can only ge
             y[i] = B[ipiv[i]] - sum;
         }
     } 
-    if (UPLO == 'U') { // here is a bug!!!!!
-        // for (j = n-1; j >= 0; --j) {
-		//     temp = y[j];
-		//     for (i = j - 2; i >= 0; --i) {
-		//         y[i] -= temp * A(i,j);
-		// 	}
-		// }
-    
-        y[n-1] = B[n-1]/A[n*n-1];// y[n-1] is correct!!!
-        for (i = n-2;i >= 0;i--) { // the other y[i] is incorrect!!!
+    if (UPLO == 'U') { 
+        y[n-1] = B[n-1]/A[n*n-1];
+        for (i = n-2;i >= 0;i--) { 
             double sum = 0.0;
             for (j = i+1;j < n;j++) {
                 sum += A[i*n + j] * y[j];
@@ -245,7 +223,7 @@ int mydgetrf_block(double *A, int *ipiv, int n, int b) {
             if (max == 0) {
                 return -1;
             } else {
-                if (max_Aii != i) { // bug here!!!!
+                if (max_Aii != i) { 
                     // swap i-th and max_Aii-th element of vector pivot
                     int temp = ipiv[i];
                     ipiv[i] = ipiv[max_Aii];
